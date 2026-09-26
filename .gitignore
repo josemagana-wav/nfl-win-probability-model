@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+ 
+# Data caches and generated outputs — regenerate from code, don't commit
+data/raw/
+*.parquet
+correlation_heatmap.png
+ 
+# Local prediction log — see Section 13 for why this one is a judgement call
+predictions_log.csv
+ 
+# Editor/OS clutter
+.vscode/*.local.json
+.DS_Store
