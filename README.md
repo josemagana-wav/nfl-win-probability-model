@@ -11,5 +11,5 @@ pip install -r requirements.txt
 ```
  
 ## Project structure
-notebooks/ exploratory scripts used while learning core pandas patterns and running EDA 
-src/ 
+notebooks/: exploratory scripts used while learning core pandas patterns and running EDA 
+src/: source code
