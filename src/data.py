@@ -13,3 +13,17 @@ pbp = nfl.load_pbp(SEASONS).to_pandas()
 schedules = schedules[schedules['game_type'] == 'REG']
 pbp = pbp[pbp['season_type'] == 'REG']
 
+
+#%%
+#Remove plays such as special teams, spikes and kneels
+plays = pbp[
+    pbp['play_type'].isin(['run', 'pass']) &
+    pbp['epa'].notna()
+].copy()
+
+# Drop games with missing scores (future/unplayed games)
+games = schedules.dropna(subset=['home_score', 'away_score']).copy()
+
+#Create binary target
+games['home_win'] = (games['home_score'] > games['away_score']).astype(int)
+
