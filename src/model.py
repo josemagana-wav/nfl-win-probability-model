@@ -2,6 +2,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 import pandas as pd
+import joblib
 
 FEATURE_COLS = ['off_epa_diff', 'def_epa_diff', 'home_field', 'rest_diff', 'div_game']
 
@@ -22,3 +23,7 @@ def train_model(X_train, y_train, C=1.0):
 def coef_inspection(model, feature_cols=FEATURE_COLS):
     coefs = pd.Series(model.named_steps['clf'].coef_[0], index=feature_cols)
     print(coefs.sort_values())
+    return coefs
+
+def save_model(model, path='model.pkl'):
+    joblib.dump(model, path)

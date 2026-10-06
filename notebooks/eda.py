@@ -94,3 +94,19 @@ lost = g0[~g0['game_id'].isin(out['game_id'])]
 print(len(lost))
 print(lost[['season', 'week', 'home_team', 'away_team']].head(20))
 print(lost.groupby('season').size())
+
+
+#%%
+from src.model import split_by_season, train_model, FEATURE_COLS
+
+X_train, y_train, X_test, y_test = split_by_season(games)
+model = train_model(X_train, y_train)
+#%%
+print('Train accuracy:', model.score(X_train, y_train))
+print('Test accuracy: ', model.score(X_test, y_test))
+# %%
+print('Always pick home:', y_test.mean())
+# %%
+from src.evaluate import evaluate
+evaluate(model, X_test, y_test, games)
+# %%
