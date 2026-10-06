@@ -1,7 +1,7 @@
 #%%
 import nflreadpy as nfl
 
-SEASONS = list(range(2015, 2025)) ##importing previous 10 seasons of data 
+SEASONS = list(range(2016, 2026)) ##importing previous 10 seasons of data 
 
 def load_data(seasons=SEASONS):
     schedules = nfl.load_schedules(seasons).to_pandas()

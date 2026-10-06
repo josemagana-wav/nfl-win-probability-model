@@ -94,4 +94,3 @@ lost = g0[~g0['game_id'].isin(out['game_id'])]
 print(len(lost))
 print(lost[['season', 'week', 'home_team', 'away_team']].head(20))
 print(lost.groupby('season').size())
-# %%
