@@ -3,26 +3,10 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import nflreadpy as nfl
+from src.data import load_data, clean_plays, build_target
+from src.features import build_features
 
 
-
-SEASONS = list(range(2015, 2025)) ##importing previous 10 seasons of data 
-
-
-schedules = nfl.load_schedules(SEASONS).to_pandas()
-pbp = nfl.load_pbp(SEASONS).to_pandas()
-
-#Take only regular season data, playoffs are far more unpredictable 
-schedules = schedules[schedules['game_type'] == 'REG']
-pbp = pbp[pbp['season_type'] == 'REG']
-
-
-#%%
-#Remove plays such as special teams, spikes and kneels
-plays = pbp[
-    pbp['play_type'].isin(['run', 'pass']) &
-    pbp['epa'].notna()
-].copy()
 
 #%%
 off_epa = (
@@ -69,4 +53,45 @@ sns.heatmap(corr, annot=True, fmt='.3f', cmap='coolwarm', center=0)
 plt.title('Correlation between candidate features and home wins')
 plt.tight_layout()
 plt.savefig('correlation heatmap.png')
+#%%
+sns.kdeplot(data=feature_df, x='off_epa_play_diff', hue='home_win',
+            fill=True, common_norm=False, alpha=0.4)
+plt.title('Offensive EPA/play differential, by game outcome')
+# %%
+sns.pairplot(feature_df[['off_epa_play_diff', 'def_epa_play_diff',
+                         'home_win']], hue='home_win', diag_kind='kde')
+
+#%%
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()))
+
+from src.data import load_data, clean_plays, build_target
+from src.features import build_features
+
+#%%
+schedules, pbp = load_data()
+plays = clean_plays(pbp)
+games = build_target(schedules)
+
+#%%
+games = build_features(plays, games)
+
+#%%
+print(len(games))
+games[['home_team', 'week', 'home_form_off_epa']].head(20)
+games[['off_epa_diff', 'def_epa_diff', 'home_field', 'rest_diff', 'div_game']].describe()
+
+
+# %%
+g0 = build_target(schedules)
+print(len(g0))
+print(g0.groupby('season').size())
+# %%
+out = build_features(plays, g0)
+lost = g0[~g0['game_id'].isin(out['game_id'])]
+print(len(lost))
+print(lost[['season', 'week', 'home_team', 'away_team']].head(20))
+print(lost.groupby('season').size())
 # %%
