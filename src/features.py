@@ -1,6 +1,4 @@
 #%%
-import pandas as pd
-#%%
 def _team_form(plays, team_col, out_name, window=8, min_periods=3):
     tg = (
         plays.groupby(['season', 'week', team_col])['epa']
@@ -46,3 +44,28 @@ def build_features(plays, games):
     games['div_game'] = games['div_game'].astype(int)
     return games
 # %%
+def _latest_form(plays, team_col, out_name, window=8):
+    tg = (
+        plays.groupby(['season', 'week', team_col])['epa']
+        .mean()
+        .reset_index()
+        .rename(columns={team_col: 'team', 'epa': 'game_epa'})
+        .sort_values(['team', 'season', 'week'])
+    )
+    return (
+        tg.groupby('team')['game_epa']
+        .apply(lambda s : s.tail(window).mean())
+        .rename(out_name)
+    )
+
+def build_upcoming_features(plays, upcoming):
+    off = _latest_form(plays, 'posteam', 'form_off_epa')
+    dfn = _latest_form(plays, 'defteam', 'form_def_epa')
+
+    up = upcoming.copy()
+    up['off_epa_diff'] = up['home_team'].map(off) - up['away_team'].map(off)
+    up['def_epa_diff'] = up['home_team'].map(dfn) - up['away_team'].map(dfn)
+    up['home_field'] = (up['location'] == 'Home').astype(int)
+    up['rest_diff'] = up['home_rest'] - up['away_rest']
+    up['div_game'] = up['div_game'].astype(int)
+    return up
