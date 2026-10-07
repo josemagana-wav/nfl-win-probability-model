@@ -14,4 +14,4 @@ predictions_log.csv
 # Editor/OS clutter
 .vscode/*.local.json
 .DS_Store
-'model.pkl' 
+model.pkl
