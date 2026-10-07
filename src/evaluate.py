@@ -22,8 +22,20 @@ def evaluate(model, X_test, y_test, games, n_bins=5):
     plt.legend()
     plt.show()
 
-    test = games.loc[X_test.index].dropna(subset=['spread_line']).copy()
+    # Skip games with no line or a pick'em (spread 0): Vegas has no favorite there
+    test = games.loc[X_test.index].dropna(subset=['spread_line'])
+    test = test[test['spread_line'] != 0].copy()
 
     test['vegas_pred'] = (test['spread_line'] > 0).astype(int)
     print('Vegas-implied accuracy:',
           accuracy_score(test['home_win'], test['vegas_pred']))
+
+
+def log_predictions(model, X_test, y_test, games, path='backtest_log.csv'):
+    log = games.loc[X_test.index, ['game_id', 'season', 'week', 'home_team',
+                                   'away_team', 'spread_line']].copy()
+    log['pred_prob_home_win'] = model.predict_proba(X_test)[:, 1]
+    log['predicted_label'] = model.predict(X_test)
+    log['actual'] = y_test
+    log.sort_values('week').to_csv(path, index=False)
+    return log
