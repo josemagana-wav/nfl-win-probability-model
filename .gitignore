@@ -9,6 +9,8 @@ data/raw/
 correlation_heatmap.png
  
 predictions_log.csv
+backtest_log.csv
+backfill_log.csv
  
 # Editor/OS clutter
 .vscode/*.local.json
