@@ -1,12 +1,13 @@
 # NFL Win Probability Model
  
 A logistic regression model predicting NFL home-team win probability,
-trained on ten seasons of play-by-play data via nflreadpy.
+trained on play-by-play data from 2016 to the current season via nflreadpy.
  
 ## Setup
 ```
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate        # macOS/Linux
+.venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 ```
  
