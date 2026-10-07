@@ -7,11 +7,7 @@ __pycache__/
 data/raw/
 *.parquet
 correlation_heatmap.png
- 
-predictions_log.csv
-backtest_log.csv
-backfill_log.csv
- 
+
 # Editor/OS clutter
 .vscode/*.local.json
 .DS_Store
