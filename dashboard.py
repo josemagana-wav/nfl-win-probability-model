@@ -104,7 +104,7 @@ if choice.startswith('Backtest'):
 elif (log['logged'] == 'Backfill').any():
     st.caption('Live: predictions marked "Live" were logged before kickoff. '
                '"Backfill" games were played before tracking began and were predicted '
-               'afterwards by a model trained only on earlier seasons.'
+               'afterwards by a model trained only on earlier seasons. '
                'Player injuries are not taken into account.')
 else:
     st.caption('Live: every prediction was logged before kickoff; '
